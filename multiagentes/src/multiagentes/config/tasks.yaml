@@ -1,0 +1,254 @@
+analyze_workplan_task:
+  description: >
+    Analizar el plan de trabajo proporcionado y extraer los requisitos clave del proyecto.
+    Instrucciones:
+    - Leer detenidamente el contenido del plan de trabajo.
+    - Identificar los objetivos principales del proyecto.
+    - Extraer los requisitos funcionales y no funcionales.
+    - Identificar las tecnologías y frameworks mencionados.
+    - Determinar las fases del proyecto y los plazos estimados.
+    - Crear un resumen conciso de los puntos clave para guiar el desarrollo.
+  expected_output: >
+    - Un resumen detallado de los requisitos del proyecto.
+    - Una lista de tecnologías y frameworks a utilizar.
+    - Un esquema de las fases del proyecto y los plazos estimados.
+    - Recomendaciones para la implementación basadas en el análisis del plan.
+  agent: project_leader
+  context:
+    - workplan_content
+
+setup_project_task:
+  description: >
+    Configurar la estructura inicial del proyecto backend.
+    Instrucciones:
+    - Inicializar un nuevo proyecto en el lenguaje de programación elegido.
+    - Configurar el entorno de desarrollo y las dependencias necesarias.
+    - Crear la estructura de carpetas para el proyecto.
+  expected_output: >
+    - Estructura del proyecto creada.
+    - Archivo de configuración de dependencias (ej., requirements.txt, package.json).
+    - Entorno de desarrollo configurado.
+  agent: backend_developer
+  context:
+    - analyze_workplan_task
+    - workplan_content
+
+implement_crud_endpoints_task:
+  description: >
+    Implementar endpoints CRUD para los recursos específicos identificados en el plan de trabajo.
+    Instrucciones:
+    - Crear los siguientes endpoints para cada recurso:
+      1. GET para obtener todos los recursos
+      2. GET para obtener un recurso por su identificador
+      3. POST para crear un nuevo recurso
+      4. PUT para actualizar un recurso existente por su identificador
+      5. DELETE para eliminar un recurso por su identificador
+    - Asegurar la validación de datos y manejo de errores para cada endpoint.
+  expected_output: >
+    - Archivo de controladores/rutas con la implementación completa de los endpoints CRUD.
+    - Implementación de validaciones de datos para cada operación.
+    - Manejo de errores robusto para cada endpoint.
+  agent: backend_developer
+  context:
+    - analyze_workplan_task
+    - workplan_content
+    - setup_project_task
+    - setup_database_task
+
+implement_custom_endpoints_task:
+  description: >
+    Implementar endpoints personalizados según los requisitos del proyecto.
+    Instrucciones:
+    - Crear los endpoints necesarios basados en los requisitos específicos del proyecto.
+    - Asegurar la validación de datos y manejo de errores.
+  expected_output: >
+    - Archivo de controladores/rutas con la implementación de los endpoints personalizados.
+    - Validaciones y manejo de errores implementados.
+  agent: backend_developer
+  context:
+    - analyze_workplan_task
+    - workplan_content
+    - setup_project_task
+    - setup_database_task
+
+implement_auth_task:
+  description: >
+    Implementar la autenticación y autorización.
+    Instrucciones:
+    - Configurar la generación y verificación de tokens de autenticación.
+    - Proteger los endpoints con autenticación y autorización.
+  expected_output: >
+    - Archivo de autenticación con la lógica de autenticación y autorización.
+    - Endpoints protegidos.
+  agent: backend_developer
+  context:
+    - analyze_workplan_task
+    - workplan_content
+    - setup_project_task
+
+review_code_quality_task:
+  description: >
+    Revisar exhaustivamente todo el código fuente generado, incluyendo el backend principal, los microservicios y el esquema de la base de datos, para asegurar su calidad y adherencia a las buenas prácticas de programación.
+    Instrucciones:
+    - Analizar el código fuente del backend principal para identificar errores de lógica, eficiencia y seguridad.
+    - Revisar el código de cada microservicio individualmente.
+    - Examinar el esquema de la base de datos y las consultas SQL generadas.
+    - Verificar el cumplimiento de las mejores prácticas de programación y patrones de diseño en todos los componentes.
+    - Evaluar la coherencia y la integración entre los diferentes componentes del sistema.
+    - Proporcionar recomendaciones detalladas para la mejora del código en cada área.
+  expected_output: >
+    - Informe detallado con observaciones sobre la calidad del código para cada componente (backend principal, microservicios, base de datos).
+    - Lista de recomendaciones y mejoras para cada parte del proyecto.
+    - Identificación de errores y problemas potenciales en todo el código.
+    - Sugerencias para optimizar la integración entre componentes.
+  agent: backend_code_reviewer
+  context:
+    - analyze_workplan_task
+    - workplan_content
+    - implement_crud_endpoints_task
+    - implement_custom_endpoints_task
+    - implement_auth_task
+    - implement_microservice_task
+    - integrate_microservices_task
+    - setup_database_task
+    - setup_database_for_microservice_task
+
+implement_code_improvements_task:
+  description: >
+    Aplicar las mejoras y correcciones sugeridas en la revisión de código a todos los componentes del proyecto (backend principal, microservicios y esquema de base de datos).
+    Instrucciones:
+    - Analizar el informe de revisión de código para cada componente.
+    - Priorizar las mejoras sugeridas basándose en su impacto y complejidad.
+    - Implementar las correcciones y mejoras en el código del backend principal.
+    - Aplicar las optimizaciones sugeridas a cada microservicio.
+    - Realizar los ajustes necesarios en el esquema de la base de datos y las consultas SQL.
+    - Documentar todos los cambios realizados.
+    - Ejecutar pruebas para asegurar que las mejoras no han introducido nuevos errores.
+  expected_output: >
+    - Código actualizado del backend principal con las mejoras implementadas.
+    - Código de microservicios optimizado según las sugerencias.
+    - Esquema de base de datos y consultas SQL mejorados.
+    - Documentación de todos los cambios realizados.
+    - Resultados de las pruebas que confirman la integridad del sistema tras las mejoras.
+  agent: backend_code_reviewer
+  context:
+    - analyze_workplan_task
+    - workplan_content
+    - review_code_quality_task
+
+setup_database_task:
+  description: >
+    Configurar la base de datos y definir los modelos de datos.
+    Instrucciones:
+    - Configurar la conexión a la base de datos elegida.
+    - Crear los modelos de datos según los requisitos del proyecto utilizando SQL o un ORM.
+    - Generar el código SQL necesario para crear las tablas y relaciones.
+  expected_output: >
+    - Archivo de configuración de la base de datos.
+    - Archivo(s) de modelos con las definiciones completas.
+    - Código SQL o equivalente generado para crear las tablas y relaciones.
+  agent: database_engineer
+  context:
+    - analyze_workplan_task
+    - workplan_content
+    - setup_project_task
+
+design_microservices_architecture_task:
+  description: >
+    Diseñar la arquitectura de microservicios para el proyecto backend.
+    Instrucciones:
+    - Identificar los componentes clave que deben ser implementados como microservicios.
+    - Diseñar la comunicación entre los microservicios utilizando APIs RESTful o mensajería.
+    - Documentar la arquitectura de microservicios y los patrones de diseño utilizados.
+  expected_output: >
+    - Diagrama de arquitectura de microservicios.
+    - Documentación de la comunicación entre microservicios.
+    - Especificaciones de diseño para cada microservicio.
+  agent: microservices_architect
+  context:
+    - analyze_workplan_task
+    - workplan_content
+    - setup_project_task
+
+implement_microservice_task:
+  description: >
+    Implementar un microservicio específico.
+    Instrucciones:
+    - Desarrollar el microservicio utilizando el lenguaje y framework elegidos.
+    - Implementar los endpoints necesarios y la lógica de negocio.
+    - Asegurar la validación de datos y manejo de errores.
+  expected_output: >
+    - Código fuente del microservicio implementado.
+    - Archivo de configuración del microservicio.
+    - Documentación del microservicio.
+  agent: microservice_developer
+  context:
+    - analyze_workplan_task
+    - workplan_content
+    - design_microservices_architecture_task
+    - setup_database_for_microservice_task
+
+integrate_microservices_task:
+  description: >
+    Integrar un microservicio con otros microservicios y sistemas.
+    Instrucciones:
+    - Configurar la comunicación entre microservicios utilizando APIs RESTful o mensajería.
+    - Asegurar la interoperabilidad y el manejo de errores en la comunicación.
+  expected_output: >
+    - Código de integración implementado.
+    - Documentación de la integración de microservicios.
+  agent: microservice_developer
+  context:
+    - analyze_workplan_task
+    - workplan_content
+    - implement_microservice_task
+
+setup_database_for_microservice_task:
+  description: >
+    Configurar la base de datos y definir los modelos de datos para un microservicio.
+    Instrucciones:
+    - Configurar la conexión a la base de datos elegida.
+    - Crear los modelos de datos según los requisitos del microservicio utilizando SQL o un ORM.
+    - Generar el código SQL necesario para crear las tablas y relaciones.
+  expected_output: >
+    - Archivo de configuración de la base de datos para el microservicio.
+    - Archivo(s) de modelos con las definiciones completas.
+    - Código SQL o equivalente generado para crear las tablas y relaciones.
+  agent: microservice_developer
+  context:
+    - analyze_workplan_task
+    - workplan_content
+    - design_microservices_architecture_task
+
+finalize_project_task:
+  description: >
+    Integrar y finalizar todo el código del proyecto, incluyendo el backend principal, los microservicios y el esquema de la base de datos, después de la revisión de calidad. 
+    Compilar todos los componentes finales y revisados del proyecto en un paquete listo para implementación.
+    Esta tarea reúne el backend principal, los microservicios y el esquema de la base de datos en una estructura coherente.
+    Instrucciones:
+    - Recopilar la versión final y revisada del código del backend principal.
+    - Recopilar todos los microservicios finales y revisados.
+    - Incluir el esquema final de la base de datos.
+    - Verificar que todos los componentes reflejan las mejoras implementadas tras la revisión de código.
+    - Compilar todos los componentes en un paquete de proyecto final.
+  expected_output: >
+    - Un archivo zip conteniendo todo el código fuente del proyecto, organizado en una estructura de directorios lógica.
+    - El archivo incluirá el código fuente final del backend principal, todos los microservicios, y el esquema final de la base de datos.
+    - Todos los archivos de código fuente, componentes y microservicios deben reflejar las correcciones y mejoras sugeridas en la revisión de código.
+    - El proyecto completo debe estar listo para ser desplegado en un entorno de producción.
+
+  agent: project_leader
+  context:
+    - analyze_workplan_task
+    - workplan_content
+    - review_code_quality_task
+    - implement_code_improvements_task
+    - implement_crud_endpoints_task
+    - implement_custom_endpoints_task
+    - implement_auth_task
+    - implement_microservice_task
+    - integrate_microservices_task
+    - setup_database_task
+    - setup_database_for_microservice_task
+
+  Output File: final_project.zip

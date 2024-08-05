@@ -1,0 +1,6 @@
+#!C:\Users\SOAINT\Desktop\Curso Langchain\Agentes2\mi_ambiente\Scripts\python.exe
+import sys
+from multiagentes.main import run
+
+if __name__ == '__main__':
+    sys.exit(run())
